@@ -1,2 +1,2 @@
-# erp-system
-경복대학교 팀프로젝트 ERP 솔루션 개발
+# tp-hr-project-2026
+인사관리시스템
