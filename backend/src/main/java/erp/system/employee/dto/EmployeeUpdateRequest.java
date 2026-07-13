@@ -7,8 +7,8 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record EmployeeUpdateRequest(
-//        Long departmentId,
-//        Long positionId,
+        Long departmentId,
+        Long positionId,
         Long employmentTypeId,
         @NotBlank(message = "이름은 필수입니다.") @Size(max = 100) String name,
         LocalDate birthDate,

@@ -1,6 +1,8 @@
 package erp.system.employee.entity;
 
 import erp.system.common.entity.BaseEntity;
+import erp.system.department.entity.Department;
+import erp.system.position.entity.Position;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
@@ -25,13 +27,13 @@ public class Employee extends BaseEntity {
     @Column(name = "employee_no", nullable = false, length = 30, unique = true)
     private String employeeNo;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "department_id")
-//    private Department department;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
 //
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "position_id")
-//    private Position position;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "position_id")
+    private Position position;
 //
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "employment_type_id")
@@ -75,10 +77,16 @@ public class Employee extends BaseEntity {
 
 
     @Builder
-    public Employee(String employeeNo, String name, LocalDate birthDate, String phone, String email, String address, LocalDate hireDate,
+    public Employee(String employeeNo,
+                    Department department,
+                    Position position,
+                    String name,
+                    LocalDate birthDate, String phone, String email, String address, LocalDate hireDate,
                     String employeeStatusCode, String bankName, String accountNumber, String accountHolder, String password) {
         this.employeeNo = employeeNo;
+        this.position=position;
         this.name = name;
+        this.department = department;
         this.birthDate = birthDate;
         this.phone = phone;
         this.email = email;
@@ -92,11 +100,15 @@ public class Employee extends BaseEntity {
     }
 
 
-    public void update(String name,
-                       LocalDate birthDate, String phone, String email, String address, LocalDate hireDate,
-                       LocalDate resignationDate, String employeeStatusCode, String bankName, String accountNumber,
-                       String accountHolder) {
-
+    public void update(
+            Department department,
+            Position position,
+            String name,
+            LocalDate birthDate, String phone, String email, String address, LocalDate hireDate,
+            LocalDate resignationDate, String employeeStatusCode, String bankName, String accountNumber,
+            String accountHolder) {
+        this.department = department;
+        this.position=position;
         this.name = name;
         this.birthDate = birthDate;
         this.phone = phone;
