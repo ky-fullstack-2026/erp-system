@@ -12,3 +12,7 @@ spring:
     open-in-view: false
   flyway:
     enabled: false
+
+jwt:
+  secret: "tp-hr-please-change-this-secret-key-min-32-bytes-long"
+  access-token-expire-minutes: 60

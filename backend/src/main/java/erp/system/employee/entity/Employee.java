@@ -2,6 +2,7 @@ package erp.system.employee.entity;
 
 import erp.system.common.entity.BaseEntity;
 import erp.system.department.entity.Department;
+import erp.system.employmenttype.entity.EmploymentType;
 import erp.system.position.entity.Position;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,6 +20,12 @@ public class Employee extends BaseEntity {
 
     public static final String STATUS_ACTIVE = "ACTIVE";
     public static final String STATUS_RESIGNED = "RESIGNED";
+    public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_EMPLOYEE = "EMPLOYEE";
+
+
+    @Column(name = "role", nullable = false, length = 20)
+    private String role;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +42,9 @@ public class Employee extends BaseEntity {
     @JoinColumn(name = "position_id")
     private Position position;
 //
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "employment_type_id")
-//    private EmploymentType employmentType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employment_type_id")
+    private EmploymentType employmentType;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -78,13 +85,17 @@ public class Employee extends BaseEntity {
 
     @Builder
     public Employee(String employeeNo,
+                    String role,
                     Department department,
                     Position position,
+                    EmploymentType employmentType,
                     String name,
                     LocalDate birthDate, String phone, String email, String address, LocalDate hireDate,
                     String employeeStatusCode, String bankName, String accountNumber, String accountHolder, String password) {
         this.employeeNo = employeeNo;
+        this.role = role;
         this.position=position;
+        this.employmentType = employmentType;
         this.name = name;
         this.department = department;
         this.birthDate = birthDate;
@@ -103,12 +114,14 @@ public class Employee extends BaseEntity {
     public void update(
             Department department,
             Position position,
+            EmploymentType employmentType,
             String name,
             LocalDate birthDate, String phone, String email, String address, LocalDate hireDate,
             LocalDate resignationDate, String employeeStatusCode, String bankName, String accountNumber,
             String accountHolder) {
         this.department = department;
         this.position=position;
+        this.employmentType=employmentType;
         this.name = name;
         this.birthDate = birthDate;
         this.phone = phone;

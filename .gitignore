@@ -8,3 +8,4 @@ frontend/npm-debug.log*
 # OS
 .DS_Store
 Thumbs.db
+.env

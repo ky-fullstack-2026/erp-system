@@ -9,6 +9,8 @@ import erp.system.employee.dto.EmployeeResponse;
 import erp.system.employee.dto.EmployeeUpdateRequest;
 import erp.system.employee.entity.Employee;
 import erp.system.employee.repository.EmployeeRepository;
+import erp.system.employmenttype.entity.EmploymentType;
+import erp.system.employmenttype.respository.EmploymentTypeRepository;
 import erp.system.position.entity.Position;
 import erp.system.position.repository.PositionRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
     private final PositionRepository positionRepository;
-//    private final EmploymentTypeRepository employmentTypeRepository;
+    private final EmploymentTypeRepository employmentTypeRepository;
     private final PasswordEncoder passwordEncoder;
 
     public EmployeeResponse getById(Long employeeId){
@@ -40,10 +42,11 @@ public class EmployeeService {
             throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
         }
         Employee employee = Employee.builder()
+                .role(Employee.ROLE_EMPLOYEE)
                 .employeeNo(request.employeeNo())
                 .department(resoloveDepartment(request.departmentId()))
                 .position(resolvePosition(request.positionId()))
-//                .employmentType(resolveEmploymentType(request.employmentTypeId()))
+                .employmentType(resolveEmploymentType(request.employmentTypeId()))
                 .name(request.name())
                 .birthDate(request.birthDate())
                 .phone(request.phone())
@@ -71,7 +74,7 @@ public class EmployeeService {
         employee.update(
                 resoloveDepartment(request.departmentId()),
                 resolvePosition(request.positionId()),
-//                resolveEmploymentType(request.employmentTypeId()),
+                resolveEmploymentType(request.employmentTypeId()),
                 request.name(),
                 request.birthDate(),
                 request.phone(),
@@ -106,6 +109,13 @@ public class EmployeeService {
         }
         return positionRepository.findById(positionId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POSITION_NOT_FOUND));
+    }
+    private EmploymentType resolveEmploymentType(Long employmentTypeId){
+        if (employmentTypeId == null) {
+            return null;
+        }
+        return employmentTypeRepository.findById(employmentTypeId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.EMPLOYMENT_TYPE_NOT_FOUND));
     }
     private Department resoloveDepartment(Long departmentId){
         if(departmentId==null){

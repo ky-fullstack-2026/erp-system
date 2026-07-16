@@ -25,6 +25,8 @@ services:
     restart: unless-stopped
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      ADMIN_EMPLOYEE_NO: ${ADMIN_EMPLOYEE_NO}
+      ADMIN_INITIAL_PASSWORD: ${ADMIN_INITIAL_PASSWORD}
     ports:
       - "8080:8080"
     depends_on:
