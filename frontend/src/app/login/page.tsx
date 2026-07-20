@@ -3,26 +3,32 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card, ErrorText, Field, Input } from "@/components/ui";
+import { login } from "@/lib/api/auth";
 
-const MOCK_EMPLOYEE_ID = "1";
-const MOCK_PASSWORD = "123456";
 
 export default function LoginPage() {
     const router = useRouter();
     const [employeeId, setEmployeeId] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    function handleSubmit(e: FormEvent) {
+    async function handleSubmit(e: FormEvent) {
         e.preventDefault();
-
-        if (employeeId === MOCK_EMPLOYEE_ID && password === MOCK_PASSWORD) {
-            setError(null);
+        setLoading(true)
+        try {
+            await login({ loginId: employeeId, password });
             router.push("/dashboard");
-            return;
-        }
 
-        setError("사번 또는 비밀번호가 올바르지 않습니다.");
+        } catch (error) {
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError("서버에 연결할 수 없습니다.");
+            }
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -48,8 +54,8 @@ export default function LoginPage() {
                         />
                     </Field>
                     <ErrorText>{error}</ErrorText>
-                    <Button type="submit" className="w-full">
-                        로그인
+                    <Button type="submit" className="w-full" disabled={loading}>
+                        {loading ? "로그인 중..." : "로그인"}
                     </Button>
                 </form>
             </Card>

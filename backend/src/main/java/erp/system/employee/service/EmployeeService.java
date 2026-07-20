@@ -6,6 +6,7 @@ import erp.system.department.entity.Department;
 import erp.system.department.repository.DepartmentRepository;
 import erp.system.employee.dto.EmployeeCreateRequest;
 import erp.system.employee.dto.EmployeeResponse;
+import erp.system.employee.dto.EmployeeSummaryResponse;
 import erp.system.employee.dto.EmployeeUpdateRequest;
 import erp.system.employee.entity.Employee;
 import erp.system.employee.repository.EmployeeRepository;
@@ -14,6 +15,8 @@ import erp.system.employmenttype.respository.EmploymentTypeRepository;
 import erp.system.position.entity.Position;
 import erp.system.position.repository.PositionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +34,11 @@ public class EmployeeService {
     public EmployeeResponse getById(Long employeeId){
         return EmployeeResponse.from(findActive(employeeId));
     }
-
+    public Page<EmployeeSummaryResponse> search(String keyword, Long departmentId, Long positionId, String status, Pageable pageable) {
+        var spec = EmployeeSpecifications.search(keyword, departmentId, positionId, status);
+        return employeeRepository.findAll(spec, pageable)
+                .map(EmployeeSummaryResponse::from);
+    }
 
     @Transactional
     public EmployeeResponse create(EmployeeCreateRequest request){

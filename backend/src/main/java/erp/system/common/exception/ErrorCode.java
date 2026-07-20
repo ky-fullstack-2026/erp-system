@@ -9,6 +9,7 @@ public enum ErrorCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "본인 데이터만 접근할 수 있습니다."),
     ACCOUNT_INACTIVE(HttpStatus.UNAUTHORIZED, "비활성화된 계정입니다."),
     DEPARTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "부서를 찾을 수 없습니다."),
+    INVALID_PARENT_DEPARTMENT(HttpStatus.BAD_REQUEST, "유효하지 않은 상위 부서입니다."),
     POSITION_NOT_FOUND(HttpStatus.NOT_FOUND, "직책을 찾을 수 없습니다."),
     EMPLOYMENT_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "사원타입을 찾을 수 없습니다."),
     EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "사원을 찾을 수 없습니다."),
@@ -24,8 +25,14 @@ public enum ErrorCode {
     DUPLICATE_OAUTH_PROVIDER(HttpStatus.CONFLICT, "이미 해당 제공자와 연동되어 있습니다."),
     EMPLOYEE_LEAVE_BALANCE_NOT_FOUND(HttpStatus.NOT_FOUND,"잔여휴가 내역을 찾을 수 없습니다."),
     PAYROLL_NOT_FOUND(HttpStatus.NOT_FOUND, "급여 내역을 찾을 수 없습니다."),
+    INVALID_PAYROLL_STATUS(HttpStatus.BAD_REQUEST, "확정된 급여만 지급 처리할 수 있습니다."),
+    PAYROLL_ITEM_MASTER_NOT_FOUND(HttpStatus.NOT_FOUND, "급여항목을 찾을 수 없습니다."),
+    INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다."),
+    PAYROLL_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "급여상세를 찾을 수 없습니다."),
     DUPLICATE_PAYROLL(HttpStatus.CONFLICT, "이미 해당 월의 급여 내역이 존재합니다."),
-    INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다.");
+    INVALID_PAYROLL_ITEM_TYPE(HttpStatus.BAD_REQUEST, "항목 유형은 EARNING 또는 DEDUCTION만 가능합니다."),
+    PAYROLL_ITEM_MASTER_IN_USE(HttpStatus.CONFLICT, "이미 급여 명세에서 사용 중인 항목은 삭제할 수 없습니다."),
+    ;
 
 
     private final HttpStatus status;

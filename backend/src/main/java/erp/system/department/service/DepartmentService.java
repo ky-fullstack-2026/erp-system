@@ -58,6 +58,7 @@ public class DepartmentService {
 
     @Transactional
     public DepartmentResponse create(DepartmentRequest request){
+        validateParent(request.parentDepartmentId(), null);
         Department department =new Department(request.departmentName(),request.parentDepartmentId());
         return  DepartmentResponse.from(departmentRepository.save(department));
     }
@@ -66,6 +67,7 @@ public class DepartmentService {
     @Transactional
     public DepartmentResponse update(Long departmentId, DepartmentRequest request) {
         Department department = findActive(departmentId);
+        validateParent(request.parentDepartmentId(), departmentId);
         department.update(request.departmentName(), request.parentDepartmentId());
         return DepartmentResponse.from(department);
     }
@@ -78,5 +80,30 @@ public class DepartmentService {
     private Department findActive(Long departmentId){
         return departmentRepository.findById(departmentId)
                 .orElseThrow(()->new BusinessException(ErrorCode.DEPARTMENT_NOT_FOUND));
+    }
+
+    // parentDepartmentId가 실제 존재하는 부서인지, 자기 자신이거나 자신의 하위 부서를 상위로 지정해
+    // 순환 참조가 생기지는 않는지 검증한다.
+    private void validateParent(Long parentDepartmentId, Long selfId) {
+        if (parentDepartmentId == null) {
+            return;
+        }
+        if (parentDepartmentId.equals(selfId)) {
+            throw new BusinessException(ErrorCode.INVALID_PARENT_DEPARTMENT);
+        }
+        Department parent = departmentRepository.findById(parentDepartmentId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.DEPARTMENT_NOT_FOUND));
+
+        if (selfId != null) {
+            Long current = parent.getParentDepartmentId();
+            while (current != null) {
+                if (current.equals(selfId)) {
+                    throw new BusinessException(ErrorCode.INVALID_PARENT_DEPARTMENT);
+                }
+                current = departmentRepository.findById(current)
+                        .map(Department::getParentDepartmentId)
+                        .orElse(null);
+            }
+        }
     }
 }

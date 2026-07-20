@@ -4,6 +4,7 @@ package erp.system.payroll.controller;
 import erp.system.payroll.dto.PayrollConfirmRequest;
 import erp.system.payroll.dto.PayrollCreateRequest;
 import erp.system.payroll.dto.PayrollResponse;
+import erp.system.payroll.dto.PayrollWithDetailsResponse;
 import erp.system.payroll.service.PayrollService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,10 @@ public class PayrollController {
     public List<PayrollResponse> getByEmployee(@RequestParam Long employeeId) {
         return payrollService.getByEmployee(employeeId);
     }
-
+    @GetMapping("/{payrollId}")
+    public PayrollWithDetailsResponse getWithDetails(@PathVariable Long payrollId) {
+        return payrollService.getWithDetails(payrollId);
+    }
     @PostMapping
     public ResponseEntity<PayrollResponse> create(@Valid @RequestBody PayrollCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(payrollService.create(request));
@@ -33,5 +37,10 @@ public class PayrollController {
     @PatchMapping("/{payrollId}/confirm")
     public PayrollResponse confirm(@PathVariable Long payrollId, @Valid @RequestBody PayrollConfirmRequest request) {
         return payrollService.confirm(payrollId, request);
+    }
+
+    @PatchMapping("/{payrollId}/pay")
+    public PayrollResponse pay(@PathVariable Long payrollId) {
+        return payrollService.pay(payrollId);
     }
 }

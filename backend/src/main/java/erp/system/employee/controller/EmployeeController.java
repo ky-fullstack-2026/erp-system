@@ -2,6 +2,7 @@ package erp.system.employee.controller;
 
 import erp.system.employee.dto.EmployeeCreateRequest;
 import erp.system.employee.dto.EmployeeResponse;
+import erp.system.employee.dto.EmployeeSummaryResponse;
 import erp.system.employee.dto.EmployeeUpdateRequest;
 import erp.system.employee.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -18,6 +19,16 @@ import org.springframework.web.bind.annotation.*;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+
+    @GetMapping
+    public Page<EmployeeSummaryResponse> search(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long departmentId,
+            @RequestParam(required = false) Long positionId,
+            @RequestParam(required = false) String status,
+            Pageable pageable) {
+        return employeeService.search(keyword, departmentId, positionId, status, pageable);
+    }
 
     @GetMapping("/{id}")
     public EmployeeResponse getById(@PathVariable Long id) {

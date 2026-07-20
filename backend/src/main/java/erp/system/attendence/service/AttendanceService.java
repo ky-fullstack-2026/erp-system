@@ -36,10 +36,12 @@ public class AttendanceService {
 
     public AttendanceSearchResponse search(LocalDate workDate, Long departmentId, String keyword, Pageable pageable) {
         var spec = EmployeeSpecifications.search(keyword, departmentId, null, Employee.STATUS_ACTIVE);
-        List<Employee> employees = employeeRepository.findAll(spec, Sort.by("name"));
+        Pageable sortedPageable = pageable.getSort().isSorted()
+                ? pageable
+                : org.springframework.data.domain.PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name"));
 
 
-        Page<Employee> employeePage = employeeRepository.findAll(spec, pageable);
+        Page<Employee> employeePage = employeeRepository.findAll(spec, sortedPageable);
         List<Employee> allMatching = employeeRepository.findAll(spec);
 
         Map<Long, Attendance> byEmployeeId = attendanceMap(workDate, allMatching);
