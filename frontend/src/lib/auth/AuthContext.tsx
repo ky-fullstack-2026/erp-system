@@ -1,12 +1,12 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { login as loginApi, LoginRequest } from "@/lib/api/auth";
+import {getMe, login as loginApi, LoginRequest } from "@/lib/api/auth";
 import { clearToken, getToken, setToken } from "@/lib/auth/token";
-// import { Employee } from "@/lib/types/employee";
+import { Employee } from "@/lib/types/employee";
 
 interface AuthContextValue {
-  // user: Employee | null;
+  user: Employee | null;
   loading: boolean;
   login: (request: LoginRequest) => Promise<void>;
   logout: () => void;
@@ -15,7 +15,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<Employee|null>(null);
   const [loading, setLoading] = useState(() => !!getToken());
 
   const logout = useCallback(() => {
@@ -27,10 +27,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!getToken()) {
       return;
     }
-    // getMe()
-      // .then(setUser)
-      // .catch(() => clearToken())
-      // .finally(() => setLoading(false));
+    getMe()
+      .then(setUser)
+      .catch(() => clearToken())
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -41,12 +41,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(async (request: LoginRequest) => {
     const response = await loginApi(request);
     setToken(response.accessToken);
-    // const me = await getMe();
-    // setUser(me);
+    const me = await getMe();
+    setUser(me);
   }, []);
 
   return (
-    <AuthContext.Provider value={{  loading, login, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{user,  loading, login, logout }}>{children}</AuthContext.Provider>
   );
 }
 

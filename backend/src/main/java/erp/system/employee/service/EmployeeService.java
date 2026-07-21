@@ -40,17 +40,17 @@ public class EmployeeService {
                 .map(EmployeeSummaryResponse::from);
     }
 
+    private static final String EMPLOYEE_NO_PREFIX = "E";
+    private static final int EMPLOYEE_NO_DIGITS = 4;
+
     @Transactional
     public EmployeeResponse create(EmployeeCreateRequest request){
-        if(employeeRepository.existsByEmployeeNo(request.employeeNo())){
-            throw new BusinessException(ErrorCode.DUPLICATE_EMPLOYEE_NO);
-        }
         if (request.email() != null && employeeRepository.existsByEmail(request.email())) {
             throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
         }
         Employee employee = Employee.builder()
                 .role(Employee.ROLE_EMPLOYEE)
-                .employeeNo(request.employeeNo())
+                .employeeNo(generateEmployeeNo())
                 .department(resoloveDepartment(request.departmentId()))
                 .position(resolvePosition(request.positionId()))
                 .employmentType(resolveEmploymentType(request.employmentTypeId()))
@@ -102,6 +102,15 @@ public class EmployeeService {
     public void delete(Long employeeId) {
         Employee employee = findActive(employeeId);
         employee.markDeleted();
+    }
+
+    private String generateEmployeeNo() {
+        long seq = employeeRepository.count() + 1;
+        String candidate;
+        do {
+            candidate = String.format("%s%0" + EMPLOYEE_NO_DIGITS + "d", EMPLOYEE_NO_PREFIX, seq++);
+        } while (employeeRepository.countByEmployeeNoIncludingDeleted(candidate) > 0);
+        return candidate;
     }
 
     private Employee findActive(Long employeeId) {

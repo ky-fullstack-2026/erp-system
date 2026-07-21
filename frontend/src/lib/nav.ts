@@ -30,6 +30,7 @@ export const TOP_TABS: TopTab[] = [
       p.startsWith("/certificate-issues") ||
       p.startsWith("/departments") ||
       p.startsWith("/positions") ||
+      p.startsWith("/employment-types") ||
       p.startsWith("/dashboard"),
     sidebar: [
       {
@@ -56,6 +57,7 @@ export const TOP_TABS: TopTab[] = [
         items: [
           { label: "부서관리", href: "/departments" },
           { label: "직책관리", href: "/positions" },
+          { label: "사원타입관리", href: "/employment-types" },
         ],
       },
     ],

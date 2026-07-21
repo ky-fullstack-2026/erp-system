@@ -13,6 +13,11 @@ export function Sidebar() {
     return <aside className="w-56 shrink-0 border-r border-slate-200 bg-white" />;
   }
 
+  const bestMatchHref = activeTab.sidebar
+    .flatMap((section) => section.items)
+    .filter((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
+
   return (
     <aside className="w-56 shrink-0 space-y-4 overflow-y-auto border-r border-slate-200 bg-white py-4">
       {activeTab.sidebar.map((section) => (
@@ -23,7 +28,7 @@ export function Sidebar() {
           </div>
           <div className="space-y-0.5">
             {section.items.map((item) => {
-              const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              const active = item.href === bestMatchHref;
               return (
                 <Link
                   key={item.href}

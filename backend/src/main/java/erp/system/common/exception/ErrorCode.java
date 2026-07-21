@@ -10,6 +10,7 @@ public enum ErrorCode {
     ACCOUNT_INACTIVE(HttpStatus.UNAUTHORIZED, "비활성화된 계정입니다."),
     DEPARTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "부서를 찾을 수 없습니다."),
     INVALID_PARENT_DEPARTMENT(HttpStatus.BAD_REQUEST, "유효하지 않은 상위 부서입니다."),
+    DEPARTMENT_IN_USE(HttpStatus.CONFLICT, "소속된 사원이 있는 부서는 삭제할 수 없습니다."),
     POSITION_NOT_FOUND(HttpStatus.NOT_FOUND, "직책을 찾을 수 없습니다."),
     EMPLOYMENT_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "사원타입을 찾을 수 없습니다."),
     EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "사원을 찾을 수 없습니다."),

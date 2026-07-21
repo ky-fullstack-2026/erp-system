@@ -7,6 +7,7 @@ import erp.system.department.dto.DepartmentResponse;
 import erp.system.department.dto.DepartmentTreeNode;
 import erp.system.department.entity.Department;
 import erp.system.department.repository.DepartmentRepository;
+import erp.system.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class DepartmentService {
     private final DepartmentRepository departmentRepository;
+    private final EmployeeRepository employeeRepository;
 
 
 
@@ -74,7 +76,11 @@ public class DepartmentService {
 
     @Transactional
     public void delete(Long departmentId) {
-        findActive(departmentId).markDeleted();
+        Department department = findActive(departmentId);
+        if (employeeRepository.existsByDepartment_DepartmentId(departmentId)) {
+            throw new BusinessException(ErrorCode.DEPARTMENT_IN_USE);
+        }
+        department.markDeleted();
     }
 
     private Department findActive(Long departmentId){

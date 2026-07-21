@@ -51,11 +51,27 @@ export function Card({ children, className = "" }: { children: ReactNode; classN
     return <div className={`rounded-lg border border-slate-200 bg-white shadow-sm ${className}`}>{children}</div>;
 }
 
-export function PageHeader({ title, actions }: { title: string; actions?: ReactNode }) {
+export function PageHeader({
+    title,
+    breadcrumb,
+    description,
+    actions,
+}: {
+    title: string;
+    breadcrumb?: string;
+    description?: string;
+    actions?: ReactNode;
+}) {
     return (
-        <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-xl font-semibold text-slate-900">{title}</h1>
-            {actions}
+        <div className="mb-6">
+            {breadcrumb && <div className="mb-4 text-sm text-slate-500">{breadcrumb}</div>}
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-xl font-semibold text-slate-900">{title}</h1>
+                    {description && <p className="mt-1 text-sm text-slate-500">{description}</p>}
+                </div>
+                {actions}
+            </div>
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import { apiFetch } from "@/lib/api/client";
 import { setToken } from "@/lib/auth/token";
-
+import { Employee, EmployeeSummary } from "@/lib/types/employee";
 export interface LoginRequest {
   loginId: string;
   password: string;
@@ -22,4 +22,8 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
   });
   setToken(response.accessToken);
   return response;
+}
+
+export function getMe(): Promise<Employee> {
+  return apiFetch<Employee>("/auth/me");
 }

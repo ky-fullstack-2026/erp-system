@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record EmployeeCreateRequest (
-        @NotBlank(message = "사번은 필수입니다.") @Size(max = 30) String employeeNo,
         Long departmentId,
         Long positionId,
         Long employmentTypeId,

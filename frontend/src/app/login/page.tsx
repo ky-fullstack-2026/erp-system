@@ -3,11 +3,12 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card, ErrorText, Field, Input } from "@/components/ui";
-import { login } from "@/lib/api/auth";
+import { useAuth } from "@/lib/auth/AuthContext";
 
 
 export default function LoginPage() {
     const router = useRouter();
+    const { login } = useAuth();
     const [employeeId, setEmployeeId] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);

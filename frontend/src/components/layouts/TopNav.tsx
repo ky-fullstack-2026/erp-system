@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { getActiveTab, TOP_TABS } from "@/lib/nav";
-// import { useAuth } from "@/lib/auth/AuthContext";
+import { useAuth } from "@/lib/auth/AuthContext";
 
 export function TopNav() {
   const pathname = usePathname();
   const activeTab = getActiveTab(pathname);
-//   const { user, logout } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
 
   function handleLogout() {
@@ -41,10 +41,10 @@ export function TopNav() {
         </button>
         <div className="flex items-center gap-2">
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-500 text-xs font-semibold">
-            {/* {user?.name?.slice(0, 1) ?? "?"} */}
+            {user?.name?.slice(0, 1) ?? "?"}
           </span>
           <span className="text-sm">
-            {/* {user?.name} */}
+            {user?.name}
             </span>
         </div>
         <button aria-label="로그아웃" onClick={handleLogout} className="text-slate-300 hover:text-white">
